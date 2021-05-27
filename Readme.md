@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг»
 
 * Студент: [Алена Тахтаганова](https://up.htmlacademy.ru/javascript/23/user/1705973).
-* Наставник: `Неизвестно`.
+* Наставник: [Михаил Маклай](https://htmlacademy.ru/profile/mikhailmaclay).
 
 ---
 
