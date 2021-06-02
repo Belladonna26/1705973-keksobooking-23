@@ -15,4 +15,4 @@ function getRandomFloatNumber(min, max, precision) {
   return parseFloat(randomFloatNumber.toFixed(precision));
 }
 
-getRandomFloatNumber();
+getRandomFloatNumber(4,25,4);
