@@ -115,8 +115,6 @@ const COORDINATES_PRECISION = 5;
 
 const AD_COUNT = 10;
 
-const getRandomArrayElement = (elements) => elements[_.random(0, elements.length - 1)];
-
 const getRandomFloatNumber = (min, max, precision) => {
   if(max <= min || min < 0) {
     throw new Error('Введено отрицательное число или максимум меньше минимума');
@@ -132,10 +130,11 @@ const getRandomNumber = (min, max) => {
   return Math.floor(Math.random()  * (max - min + 1) ) + min;
 };
 
+const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
+
 const getRandomArray = (array) => {
   const randomArray = Array.from({length: getRandomNumber(1, array.length)}).map(() => getRandomArrayElement(array));
-  const newRandomElementsArray = [...new Set(randomArray)];
-  return newRandomElementsArray;
+  return [...new Set(randomArray)];
 };
 
 const createAuthor = () => ({
@@ -161,14 +160,11 @@ const createLocation = () => ({
   lng: getRandomFloatNumber(MIN_LONGTITUDE, MAX_LONGTITUDE, COORDINATES_PRECISION),
 });
 
-const createAd = () => {
-  const ad = {
-    author: createAuthor(),
-    offer: createOffer(),
-    location: createLocation(),
-  };
-  return ad;
-};
+const createAd = () => ({
+  author: createAuthor(),
+  offer: createOffer(),
+  location: createLocation(),
+});
 
 const ads = Array.from({length: AD_COUNT}).map(() =>
   createAd());
