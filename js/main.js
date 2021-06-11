@@ -1,15 +1,6 @@
-
-import {createAuthor} from './author.js';
-import {createOffer} from './offer.js';
-import {createLocation} from './location.js';
+import {createAd} from './mocks/ad.js';
 
 const AD_COUNT = 10;
-
-const createAd = () => ({
-  author: createAuthor(),
-  offer: createOffer(),
-  location: createLocation(),
-});
 
 const ads = Array.from({length: AD_COUNT}).map(() =>
   createAd());

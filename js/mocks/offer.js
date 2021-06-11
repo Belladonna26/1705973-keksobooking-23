@@ -1,4 +1,5 @@
-import {getRandomNumber, getRandomArrayElement, getRandomArray} from './util.js';
+import {getRandomNumber, getRandomArrayElement, getRandomArray} from '../util.js';
+import {HousingType, Feature} from '../enums.js';
 
 const TITLES = [
   'Сдается новый дом в центре Токио',
@@ -25,14 +26,6 @@ const ADDRESSES = [
 const MIN_PRICE = 500;
 
 const MAX_PRICE = 5000;
-
-const HousingType = {
-  palace: 'palace',
-  flat: 'flat',
-  house: 'house',
-  bungalow: 'bungalow',
-  hotel: 'hotel',
-};
 
 const HOUSING_TYPES = [
   HousingType.palace,
@@ -62,15 +55,6 @@ const CHECKOUT = [
   '14:00',
 ];
 
-const Feature = {
-  wifi: 'wifi',
-  dishwasher: 'dishwasher',
-  parking: 'parking',
-  washer: 'washer',
-  elevator: 'elevator',
-  conditioner: 'conditioner',
-};
-
 const FEATURES = [
   Feature.wifi,
   Feature.dishwasher,
@@ -94,7 +78,7 @@ const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
 
-const createOffer = () => ({
+export const createOffer = () => ({
   title: getRandomArrayElement(TITLES),
   address: getRandomArrayElement(ADDRESSES),
   price: getRandomNumber(MIN_PRICE, MAX_PRICE),
@@ -108,4 +92,3 @@ const createOffer = () => ({
   photos: getRandomArray(PHOTOS),
 });
 
-export {createOffer};

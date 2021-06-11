@@ -1,4 +1,4 @@
-import {getRandomArrayElement} from './util.js';
+import {getRandomArrayElement} from '../util.js';
 
 const AUTHOR_AVATARS = [
   'img/avatars/user01.png',
@@ -11,8 +11,8 @@ const AUTHOR_AVATARS = [
   'img/avatars/user08.png',
 ];
 
-const createAuthor = () => ({
+export const createAuthor = () => ({
   avatar: getRandomArrayElement(AUTHOR_AVATARS),
 });
 
-export {createAuthor};
+

@@ -1,4 +1,4 @@
-import {getRandomFloatNumber} from './util.js';
+import {getRandomFloatNumber} from '../util.js';
 
 const MIN_LATTITUDE = 35.65000;
 
@@ -10,9 +10,8 @@ const MAX_LONGTITUDE = 139.80000;
 
 const COORDINATES_PRECISION = 5;
 
-const createLocation = () => ({
+export const createLocation = () => ({
   lat: getRandomFloatNumber(MIN_LATTITUDE, MAX_LATTITUDE, COORDINATES_PRECISION),
   lng: getRandomFloatNumber(MIN_LONGTITUDE, MAX_LONGTITUDE, COORDINATES_PRECISION),
 });
 
-export {createLocation};
