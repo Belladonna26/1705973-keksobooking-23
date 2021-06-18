@@ -1,6 +1,9 @@
-import {getRandomNumber, getRandomArrayElement, getRandomArray} from '../util.js';
+import {getRandomNumber, getRandomArrayElement, getRandomArray} from '../utils.js';
 import {HousingType, Feature} from '../enums.js';
 
+/**
+ * @readonly
+ */
 const TITLES = [
   'Сдается новый дом в центре Токио',
   'Сдается комната в общежитии',
@@ -12,6 +15,9 @@ const TITLES = [
   'Сдается чистая комната в трехкомнатной квартире',
 ];
 
+/**
+ * @readonly
+ */
 const ADDRESSES = [
   '12,52',
   '45,40',
@@ -27,6 +33,9 @@ const MIN_PRICE = 500;
 
 const MAX_PRICE = 5000;
 
+/**
+ * @readonly
+ */
 const HOUSING_TYPES = [
   HousingType.palace,
   HousingType.flat,
@@ -43,18 +52,27 @@ const MIN_GUESTS_COUNT = 1;
 
 const MAX_GUESTS_COUNT = 5;
 
+/**
+ * @readonly
+ */
 const CHECKIN = [
   '12:00',
   '13:00',
   '14:00',
 ];
 
+/**
+ * @readonly
+ */
 const CHECKOUT = [
   '12:00',
   '13:00',
   '14:00',
 ];
 
+/**
+ * @readonly
+ */
 const FEATURES = [
   Feature.wifi,
   Feature.dishwasher,
@@ -64,6 +82,9 @@ const FEATURES = [
   Feature.conditioner,
 ];
 
+/**
+ * @readonly
+ */
 const DESCRIPTIONS = [
   'Отличное состояние, имеется все для уютного проживания',
   'Рядом метро и вся нужная транспортная развязка. Чистая квартира',
@@ -72,12 +93,18 @@ const DESCRIPTIONS = [
   'Косметический ремонт, спальный район',
 ];
 
+/**
+ * @readonly
+ */
 const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/claire-rendall-b6kAwr1i0Iw.jpg',
 ];
 
+/**
+ * @returns {Offer}
+ */
 export const createOffer = () => ({
   title: getRandomArrayElement(TITLES),
   address: getRandomArrayElement(ADDRESSES),
