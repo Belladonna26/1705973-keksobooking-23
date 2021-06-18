@@ -1,16 +1,16 @@
 export const Feature = {
-  wifi: 'wifi',
-  dishwasher: 'dishwasher',
-  parking: 'parking',
-  washer: 'washer',
-  elevator: 'elevator',
-  conditioner: 'conditioner',
+  wifi: 'Wi-fi',
+  dishwasher: 'Посудомоечная машина',
+  parking: 'Парковка',
+  washer: 'Стиральная машина',
+  elevator: 'Лифт',
+  conditioner: 'Кондиционер',
 };
 
 export const HousingType = {
-  palace: 'palace',
-  flat: 'flat',
-  house: 'house',
-  bungalow: 'bungalow',
-  hotel: 'hotel',
+  palace: 'Дворец',
+  flat: 'Квартира',
+  house: 'Дом',
+  bungalow: 'Бунгало',
+  hotel: 'Отель',
 };
