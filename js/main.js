@@ -3,7 +3,7 @@ import {createAd} from './mocks/ad.js';
 
 const mapCanvas = document.querySelector('.map__canvas');
 
-if (mapCanvas === undefined) {
+if (mapCanvas === null) {
   throw new Error('Не найден mapCanvas');
 }
 

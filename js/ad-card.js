@@ -149,11 +149,19 @@ const getAdCardOfferTypeText = (type) => {
  * @throws {Error}
  */
 export const createAdCard = (ad) => {
-  const adCard = document.querySelector('#card').content.querySelector('.popup').cloneNode(true);
+  const adCardTemplate = document.querySelector('#card');
 
-  if (adCard === undefined) {
-    throw new Error('Не найден adCard');
+  if (adCardTemplate === null) {
+    throw new Error('Не найден adCardTemplate');
   }
+
+  const adCardTemplateContent = adCardTemplate.content.querySelector('.popup');
+
+  if (adCardTemplateContent === null) {
+    throw new Error('Не найден adCardTemplateContent');
+  }
+
+  const adCard = adCardTemplateContent.cloneNode(true);
 
   const adCardAuthorAvatar = adCard.querySelector('.popup__avatar');
   const adCardOfferTitle = adCard.querySelector('.popup__title');
@@ -199,7 +207,7 @@ export const createAdCard = (ad) => {
     adCardOfferAddress.textContent = ad.offer.address;
   }
 
-  if(ad.offer.price) {
+  if(ad.offer.price === undefined) {
     adCardOfferPrice.remove();
   } else {
     adCardOfferPrice.replaceWith(createAdCardOfferPrice(ad.offer.price));
@@ -211,13 +219,13 @@ export const createAdCard = (ad) => {
     adCardOfferType.textContent = getAdCardOfferTypeText(ad.offer.type);
   }
 
-  if(ad.offer.rooms, ad.offer.guests === undefined) {
+  if(ad.offer.rooms === undefined, ad.offer.guests === undefined) {
     adCardOfferGuests.remove();
   } else {
     adCardOfferGuests.textContent = getAdCardOfferGuestsText(ad.offer.rooms, ad.offer.guests);
   }
 
-  if(ad.offer.checkin, ad.offer.checkout) {
+  if(ad.offer.checkin === undefined, ad.offer.checkout === undefined) {
     adCardOfferCheckinCheckoutTime.remove();
   } else {
     adCardOfferCheckinCheckoutTime.textContent = getAdCardOfferCheckinCheckoutTimeText(ad.offer.checkin, ad.offer.checkout);
