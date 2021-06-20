@@ -4,7 +4,6 @@ import {pluralize} from './utils.js';
 /**
  * @readonly
  */
-
 const featureName = {
   [Feature.wifi]: 'Wi-fi',
   [Feature.dishwasher]: 'Посудомоечная машина',
@@ -17,7 +16,6 @@ const featureName = {
 /**
  * @readonly
  */
-
 const housingTypeName = {
   [HousingType.palace]: 'Дворец',
   [HousingType.flat]: 'Квартира',
@@ -30,7 +28,6 @@ const housingTypeName = {
  * @param {Feature} feature
  * @returns {HTMLLIElement}
  */
-
 const createAdCardOfferFeature = (feature) => {
   const adCardOfferFeature = document.createElement('li');
   adCardOfferFeature.classList.add('popup__feature', `popup__feature--${feature}`);
@@ -49,7 +46,6 @@ const createAdCardOfferFeature = (feature) => {
  * @param {Feature[]} features
  * @returns {HTMLUListElement}
  */
-
 const createAdCardOfferFeatures = (features) => {
   const adCardOfferFeatures = document.createElement('ul');
   adCardOfferFeatures.classList.add('popup__features');
@@ -65,7 +61,6 @@ const createAdCardOfferFeatures = (features) => {
  * @param {string} photo
  * @returns {HTMLImageElement}
  */
-
 const createAdCardOfferPhoto = (photo) => {
   const adCardOfferPhoto = document.createElement('img');
 
@@ -95,10 +90,10 @@ const createAdCardOfferPhotos = (photos) => {
 
 /**
  * @param {number} price
- * @returns {HTMLDivElement}
+ * @returns {HTMLPElement}
  */
 const createAdCardOfferPrice = (price) => {
-  const adCardOfferPrice = document.createElement('div');
+  const adCardOfferPrice = document.createElement('p');
 
   adCardOfferPrice.textContent = `${price} `;
 
@@ -115,10 +110,9 @@ const createAdCardOfferPrice = (price) => {
  * @param {number} guests
  * @returns {string}
  */
-
 const getAdCardOfferGuestsText = (rooms, guests) => {
   const pluralizedRooms = pluralize(rooms, ['комната', 'комнаты', 'комнат']);
-  const pluralizedGuests = pluralize(guests, ['гость', 'гостя', 'гостей']);
+  const pluralizedGuests = pluralize(guests, ['гостя', 'гостей', 'гостей']);
 
   return `${rooms} ${pluralizedRooms} для ${guests} ${pluralizedGuests}`;
 };
@@ -139,7 +133,6 @@ const getAdCardOfferCheckinCheckoutTimeText = (checkin, checkout) => (
  * @return {string}
  * @throws {Error}
  */
-
 const getAdCardOfferTypeText = (type) => {
   const adCardOfferTypeText = housingTypeName[type];
 
@@ -155,13 +148,13 @@ const getAdCardOfferTypeText = (type) => {
  * @returns {Node}
  * @throws {Error}
  */
-
 export const createAdCard = (ad) => {
   const adCard = document.querySelector('#card').content.querySelector('.popup').cloneNode(true);
 
   if (adCard === undefined) {
     throw new Error('Не найден adCard');
   }
+
   const adCardAuthorAvatar = adCard.querySelector('.popup__avatar');
   const adCardOfferTitle = adCard.querySelector('.popup__title');
   const adCardOfferAddress = adCard.querySelector('.popup__text.popup__text--address');
@@ -174,30 +167,79 @@ export const createAdCard = (ad) => {
   const adCardOfferPhotos = adCard.querySelector('.popup__photo');
 
   if (
-    adCardAuthorAvatar === undefined ||
-    adCardOfferTitle === undefined ||
-    adCardOfferAddress === undefined ||
-    adCardOfferPrice === undefined ||
-    adCardOfferType === undefined ||
-    adCardOfferGuests === undefined ||
-    adCardOfferCheckinCheckoutTime === undefined ||
-    adCardOfferFeatures === undefined ||
-    adCardOfferDescription === undefined ||
-    adCardOfferPhotos === undefined
+    adCardAuthorAvatar === null ||
+    adCardOfferTitle === null ||
+    adCardOfferAddress === null ||
+    adCardOfferPrice === null ||
+    adCardOfferType === null ||
+    adCardOfferGuests === null ||
+    adCardOfferCheckinCheckoutTime === null ||
+    adCardOfferFeatures === null ||
+    adCardOfferDescription === null ||
+    adCardOfferPhotos === null
   ) {
     throw new Error('В adCard отсутствуют необходимые элементы');
   }
 
-  adCardAuthorAvatar.src = ad.author.avatar;
-  adCardOfferTitle.textContent = ad.offer.title;
-  adCardOfferAddress.textContent = ad.offer.address;
-  adCardOfferPrice.replaceWith(createAdCardOfferPrice(ad.offer.price));
-  adCardOfferType.textContent = getAdCardOfferTypeText(ad.offer.type);
-  adCardOfferGuests.textContent = getAdCardOfferGuestsText(ad.offer.rooms, ad.offer.guests);
-  adCardOfferCheckinCheckoutTime.textContent = getAdCardOfferCheckinCheckoutTimeText(ad.offer.checkin, ad.offer.checkout);
-  adCardOfferFeatures.replaceWith(createAdCardOfferFeatures(ad.offer.features));
-  adCardOfferDescription.textContent = ad.offer.description;
-  adCardOfferPhotos.replaceWith(createAdCardOfferPhotos(ad.offer.photos));
+  if(ad.author.avatar === undefined) {
+    adCardAuthorAvatar.remove();
+  } else {
+    adCardAuthorAvatar.src = ad.author.avatar;
+  }
+
+  if(ad.offer.title === undefined) {
+    adCardOfferTitle.remove();
+  } else {
+    adCardOfferTitle.textContent = ad.offer.title;
+  }
+
+  if(ad.offer.address === undefined) {
+    adCardOfferAddress.remove();
+  } else {
+    adCardOfferAddress.textContent = ad.offer.address;
+  }
+
+  if(ad.offer.price) {
+    adCardOfferPrice.remove();
+  } else {
+    adCardOfferPrice.replaceWith(createAdCardOfferPrice(ad.offer.price));
+  }
+
+  if(ad.offer.type === undefined) {
+    adCardOfferType.remove();
+  } else {
+    adCardOfferType.textContent = getAdCardOfferTypeText(ad.offer.type);
+  }
+
+  if(ad.offer.rooms, ad.offer.guests === undefined) {
+    adCardOfferGuests.remove();
+  } else {
+    adCardOfferGuests.textContent = getAdCardOfferGuestsText(ad.offer.rooms, ad.offer.guests);
+  }
+
+  if(ad.offer.checkin, ad.offer.checkout) {
+    adCardOfferCheckinCheckoutTime.remove();
+  } else {
+    adCardOfferCheckinCheckoutTime.textContent = getAdCardOfferCheckinCheckoutTimeText(ad.offer.checkin, ad.offer.checkout);
+  }
+
+  if(ad.offer.features === undefined || ad.offer.features.length === 0) {
+    adCardOfferFeatures.remove();
+  } else {
+    adCardOfferFeatures.replaceWith(createAdCardOfferFeatures(ad.offer.features));
+  }
+
+  if(ad.offer.description === undefined) {
+    adCardOfferDescription.remove();
+  } else {
+    adCardOfferDescription.textContent = ad.offer.description;
+  }
+
+  if(ad.offer.photos === undefined || ad.offer.photos.length === 0) {
+    adCardOfferPhotos.remove();
+  } else {
+    adCardOfferPhotos.replaceWith(createAdCardOfferPhotos(ad.offer.photos));
+  }
 
   return adCard;
 };

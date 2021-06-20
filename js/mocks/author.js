@@ -3,7 +3,6 @@ import {getRandomArrayElement} from '../utils.js';
 /**
  * @readonly
  */
-
 const AUTHOR_AVATARS = [
   'img/avatars/user01.png',
   'img/avatars/user02.png',
@@ -18,7 +17,6 @@ const AUTHOR_AVATARS = [
 /**
  * @returns {Author}
  */
-
 export const createAuthor = () => ({
   avatar: getRandomArrayElement(AUTHOR_AVATARS),
 });

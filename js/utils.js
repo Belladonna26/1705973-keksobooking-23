@@ -5,7 +5,6 @@
  * @return {number}
  * @throws {Error}
  */
-
 export const getRandomFloatNumber = (min, max, precision) => {
   if(max <= min || min < 0) {
     throw new Error('Введено отрицательное число или максимум меньше минимума');
@@ -20,7 +19,6 @@ export const getRandomFloatNumber = (min, max, precision) => {
  * @return {number}
  * @throws {Error}
  */
-
 export const getRandomNumber = (min, max) => {
   if(max <= min || min < 0) {
     throw new Error('Введено отрицательное число или максимум меньше минимума');
@@ -33,7 +31,6 @@ export const getRandomNumber = (min, max) => {
  * @param {T[]} elements
  * @return {T}
  */
-
 export const getRandomArrayElement = (elements) => elements[getRandomNumber(0, elements.length - 1)];
 
 /**
@@ -41,7 +38,6 @@ export const getRandomArrayElement = (elements) => elements[getRandomNumber(0, e
  * @param {T[]} array
  * @return {T[]}
  */
-
 export const getRandomArray = (array) => {
   const randomArray = Array.from({length: getRandomNumber(1, array.length)}).map(() => getRandomArrayElement(array));
   return [...new Set(randomArray)];
@@ -52,7 +48,6 @@ export const getRandomArray = (array) => {
  * @param {string[]} wordForms
  * @return {string}
  */
-
 export const pluralize = (number, wordForms) => {
   const [one, two, many] = wordForms;
 
@@ -96,5 +91,4 @@ export const createAndFillArray = (length, fnOrValue) => {
  * @param {T[]} array
  * @return {T}
  */
-
 export const getFirstArrayElement = (array) => array[0];

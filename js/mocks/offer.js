@@ -4,7 +4,6 @@ import {HousingType, Feature} from '../enums.js';
 /**
  * @readonly
  */
-
 const TITLES = [
   'Сдается новый дом в центре Токио',
   'Сдается комната в общежитии',
@@ -19,7 +18,6 @@ const TITLES = [
 /**
  * @readonly
  */
-
 const ADDRESSES = [
   '12,52',
   '45,40',
@@ -38,7 +36,6 @@ const MAX_PRICE = 5000;
 /**
  * @readonly
  */
-
 const HOUSING_TYPES = [
   HousingType.palace,
   HousingType.flat,
@@ -58,7 +55,6 @@ const MAX_GUESTS_COUNT = 5;
 /**
  * @readonly
  */
-
 const CHECKIN = [
   '12:00',
   '13:00',
@@ -68,7 +64,6 @@ const CHECKIN = [
 /**
  * @readonly
  */
-
 const CHECKOUT = [
   '12:00',
   '13:00',
@@ -78,7 +73,6 @@ const CHECKOUT = [
 /**
  * @readonly
  */
-
 const FEATURES = [
   Feature.wifi,
   Feature.dishwasher,
@@ -91,7 +85,6 @@ const FEATURES = [
 /**
  * @readonly
  */
-
 const DESCRIPTIONS = [
   'Отличное состояние, имеется все для уютного проживания',
   'Рядом метро и вся нужная транспортная развязка. Чистая квартира',
@@ -103,7 +96,6 @@ const DESCRIPTIONS = [
 /**
  * @readonly
  */
-
 const PHOTOS = [
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/duonguyen-8LrGtIxxa4w.jpg',
   'https://assets.htmlacademy.ru/content/intensive/javascript-1/keksobooking/brandon-hoogenboom-SNxQGWxZQi0.jpg',
@@ -113,7 +105,6 @@ const PHOTOS = [
 /**
  * @returns {Offer}
  */
-
 export const createOffer = () => ({
   title: getRandomArrayElement(TITLES),
   address: getRandomArrayElement(ADDRESSES),
