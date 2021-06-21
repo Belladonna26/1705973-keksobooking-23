@@ -1,10 +1,13 @@
+import {createAdCard} from './ad-card.js';
 import {createAd} from './mocks/ad.js';
 
-const AD_COUNT = 10;
+const mapCanvas = document.querySelector('.map__canvas');
 
-const ads = Array.from({length: AD_COUNT}).map(() =>
-  createAd());
+if (mapCanvas === null) {
+  throw new Error('Не найден mapCanvas');
+}
 
-// eslint-disable-next-line no-console
-console.log(ads);
+const ad = createAd();
+const adCard = createAdCard(ad);
 
+mapCanvas.appendChild(adCard);

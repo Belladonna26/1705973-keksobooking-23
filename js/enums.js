@@ -1,3 +1,6 @@
+/**
+ * @readonly
+ */
 export const Feature = {
   wifi: 'wifi',
   dishwasher: 'dishwasher',
@@ -7,6 +10,9 @@ export const Feature = {
   conditioner: 'conditioner',
 };
 
+/**
+ * @readonly
+ */
 export const HousingType = {
   palace: 'palace',
   flat: 'flat',
