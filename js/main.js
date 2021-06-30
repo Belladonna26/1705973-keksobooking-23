@@ -1,5 +1,5 @@
-import {createAdCard} from './ad-card.js';
 import {createAd} from './mocks/ad.js';
+import {createAdCard} from './ad-card.js';
 import {disableAdForm} from './ad-form.js';
 import {disableMapFiltersForm} from './map-filters-form.js';
 

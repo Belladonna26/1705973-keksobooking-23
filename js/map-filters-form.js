@@ -1,6 +1,6 @@
 const mapFiltersForm = document.querySelector('.map__filters');
 
-if(mapFiltersForm === null) {
+if (mapFiltersForm === null) {
   throw new Error('Не найден mapFiltersForm');
 }
 
