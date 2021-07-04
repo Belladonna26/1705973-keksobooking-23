@@ -129,3 +129,4 @@ housingTypeSelect.addEventListener('change', handleHousingTypeSelectChange);
 roomsSelect.addEventListener('change', handleRoomsSelectChange);
 
 updateCapacitySelectOptions(roomsSelect.value);
+
