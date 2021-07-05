@@ -1,5 +1,5 @@
-import {Feature, HousingType} from './enums.js';
-import {pluralize} from './utils.js';
+import {Feature, HousingType} from '../enums.js';
+import {pluralize} from '../utils.js';
 
 /**
  * @readonly
