@@ -1,4 +1,7 @@
 import {HousingType} from './enums.js';
+import {addMapLoadHandler} from './map/map.js';
+import {addMainPinMarkerMoveHandler} from './map/map.js';
+import {MAP_VIEW_CENTER_COORDINATES} from './map/constants.js';
 
 const adForm = document.querySelector('.ad-form');
 
@@ -12,6 +15,7 @@ const roomsSelect = adForm.elements.rooms;
 const capacitySelect = adForm.elements.capacity;
 const timeinSelect = adForm.elements.timein;
 const timeoutSelect = adForm.elements.timeout;
+const addressInput = adForm.elements.address;
 
 if (
   housingTypeSelect === null ||
@@ -19,7 +23,8 @@ if (
   roomsSelect === null ||
   capacitySelect === null ||
   timeinSelect === null ||
-  timeoutSelect === null
+  timeoutSelect === null ||
+  addressInput === null
 ) {
   throw new Error('В adForm отсутствуют необходимые элементы');
 }
@@ -56,6 +61,8 @@ export const disableAdForm = () => {
   });
 };
 
+disableAdForm();
+
 /**
  * @affects adForm
  * @returns {void}
@@ -83,6 +90,12 @@ const updateCapacitySelectOptions = (rooms) => {
     }
   });
 };
+
+/**
+ * @param {Coordinates} coordinates
+ * @returns {string}
+ */
+const formatCoordinatesToString = (coordinates) => `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
 
 /**
  * @affects priceInput
@@ -123,10 +136,29 @@ const handleTimeoutSelectChange = () => {
   timeinSelect.value = timeoutSelect.value;
 };
 
+/**
+ * @affects adForm
+ * @returns {void}
+ */
+const handleMapLoad = () => {
+  enableAdForm();
+};
+
+/**
+ * @param {Coordinates} coordinates
+ * @affects addressInput
+ * @return {void}
+ */
+const handleMapPinMarkerMove = (coordinates) => {
+  addressInput.value = formatCoordinatesToString(coordinates);
+};
+
 timeinSelect.addEventListener('change', handleTimeinSelectChange);
 timeoutSelect.addEventListener('change', handleTimeoutSelectChange);
 housingTypeSelect.addEventListener('change', handleHousingTypeSelectChange);
 roomsSelect.addEventListener('change', handleRoomsSelectChange);
+addMapLoadHandler(handleMapLoad);
+addMainPinMarkerMoveHandler(handleMapPinMarkerMove);
 
+addressInput.value = formatCoordinatesToString(MAP_VIEW_CENTER_COORDINATES);
 updateCapacitySelectOptions(roomsSelect.value);
-

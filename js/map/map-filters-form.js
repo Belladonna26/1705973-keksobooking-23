@@ -4,6 +4,10 @@ if (mapFiltersForm === null) {
   throw new Error('Не найден mapFiltersForm');
 }
 
+/**
+ * @affects mapFiltersForm
+ * @returns {void}
+ */
 export const disableMapFiltersForm = () => {
   mapFiltersForm.classList.add('map__filters--disabled');
   Array.from(mapFiltersForm.elements).forEach((element) => {
@@ -11,6 +15,10 @@ export const disableMapFiltersForm = () => {
   });
 };
 
+/**
+ * @affects mapFiltersForm
+ * @returns {void}
+ */
 export const enableMapFiltersForm = () => {
   mapFiltersForm.classList.remove('map__filters--disabled');
   Array.from(mapFiltersForm.elements).forEach((element) => {

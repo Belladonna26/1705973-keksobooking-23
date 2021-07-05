@@ -1,3 +1,2 @@
-import './map.js';
-
-
+import './map/map.js';
+import './ad-form.js';
