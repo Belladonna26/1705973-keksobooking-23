@@ -10,6 +10,6 @@
  * @property {string} checkin Время заезда
  * @property {string} checkout Время выезда
  * @property {Feature[]} features Особенности
- * @property {string} description Описание предложения
+ * @property {string} [description] Описание предложения
  * @property {string[]} photos Массив с URL изображений
  */

@@ -1,9 +1,11 @@
 import {HousingType} from './enums.js';
-import {addMapLoadHandler} from './map/map.js';
-import {addMainPinMarkerMoveHandler} from './map/map.js';
-import {MAP_VIEW_CENTER_COORDINATES} from './map/constants.js';
+import {addMapLoadHandler, addMainPinMarkerMoveHandler, resetMap} from './map/map.js';
+import {saveAd} from './fetchers.js';
+import {showModal} from './modal.js';
 
+const TIME_OUT = 1500;
 const adForm = document.querySelector('.ad-form');
+
 
 if (adForm === null) {
   throw new Error('Не найден adForm');
@@ -160,5 +162,53 @@ roomsSelect.addEventListener('change', handleRoomsSelectChange);
 addMapLoadHandler(handleMapLoad);
 addMainPinMarkerMoveHandler(handleMapPinMarkerMove);
 
-addressInput.value = formatCoordinatesToString(MAP_VIEW_CENTER_COORDINATES);
 updateCapacitySelectOptions(roomsSelect.value);
+
+/**
+ * @affects window
+ * @affects document
+ * @returns {void}
+ */
+const handleSaveAdFullfilled = () => {
+  showModal({
+    message: 'Данные отправлены успешно',
+    isError: false,
+  }, TIME_OUT);
+};
+
+/**
+ * @affects window
+ * @affects document
+ * @returns {void}
+ */
+export const handleSaveAdRejected = () => {
+  showModal({
+    message: 'При отправке данных произошла ошибка',
+    isError: true,
+    buttonParams: {
+      text: 'Попробовать ещё раз',
+    },
+  });
+};
+
+const handleAdFormReset = () => {
+  resetMap();
+};
+
+/**
+ * @param {Event} evt
+ * @returns {void}
+ */
+export const handleAdFormSubmit = (evt) => {
+  evt.preventDefault();
+
+  const formData = new FormData(adForm);
+
+  saveAd(formData)
+    .then(handleSaveAdFullfilled)
+    .then(adForm.reset())
+    .catch(handleSaveAdRejected);
+};
+
+adForm.addEventListener('submit', handleAdFormSubmit);
+adForm.addEventListener('reset', handleAdFormReset);

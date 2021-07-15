@@ -92,3 +92,4 @@ export const createAndFillArray = (length, fnOrValue) => {
  * @return {T}
  */
 export const getFirstArrayElement = (array) => array[0];
+

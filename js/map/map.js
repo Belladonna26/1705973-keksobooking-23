@@ -1,7 +1,8 @@
-import {createAd} from '../mocks/ad.js';
-import {createAndFillArray} from '../utils.js';
 import {disableMapFiltersForm, enableMapFiltersForm} from './map-filters-form.js';
 import {createAdCard} from './ad-card.js';
+import {fetchAds} from '../fetchers.js';
+import {showModal} from '../modal.js';
+import {MAP_MAX_PIN_MARKERS} from './constants.js';
 import {
   MAP_VIEW_CENTER_COORDINATES,
   MAP_VIEW_ZOOM,
@@ -12,6 +13,10 @@ import {
   MAP_PIN_ICON_SIZE,
   MAP_PIN_ANCHOR_SIZE
 } from './constants.js';
+
+if (L === undefined) {
+  throw new Error('Не найден L');
+}
 
 disableMapFiltersForm();
 
@@ -108,11 +113,10 @@ export const addMainPinMarkerMoveHandler = (handler) => {
 mainPinMarker.on('move', handleMainPinMarkerMove);
 
 /**
- *
  * @param {Ad} ad
  * @returns {void}
  */
-const renderPinMarker = (ad) => {
+export const renderPinMarker = (ad) => {
   L.marker(
     ad.location,
     {
@@ -126,6 +130,37 @@ const renderPinMarker = (ad) => {
     .bindPopup(createAdCard(ad), {keepInView: true});
 };
 
-const ads = createAndFillArray(10, createAd);
+/**
+ * @returns {void}
+ */
+export const resetMap = () => {
+  mainPinMarker.setLatLng(MAP_VIEW_CENTER_COORDINATES);
+  map.closePopup();
+  map.setView(MAP_VIEW_CENTER_COORDINATES, MAP_VIEW_ZOOM);
+};
 
-ads.forEach(renderPinMarker);
+/**
+ * @returns {void}
+ */
+const handleFetchAdsFulfilled = (ads) => {
+  ads.slice(0, MAP_MAX_PIN_MARKERS).forEach(renderPinMarker);
+};
+
+/**
+ * @affects window
+ * @affects document
+ * @returns {void}
+ */
+const handleFetchAdsRejected = () => {
+  showModal({
+    message: 'Что-то пошло не так',
+    isError: true,
+    buttonParams: {
+      text: 'Попробовать ещё раз',
+    },
+  });
+};
+
+fetchAds()
+  .then(handleFetchAdsFulfilled)
+  .catch(handleFetchAdsRejected);
