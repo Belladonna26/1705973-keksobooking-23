@@ -93,3 +93,8 @@ export const createAndFillArray = (length, fnOrValue) => {
  */
 export const getFirstArrayElement = (array) => array[0];
 
+/**
+ * @param {Coordinates} coordinates
+ * @returns {string}
+ */
+export const formatCoordinatesToString = (coordinates) => `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
