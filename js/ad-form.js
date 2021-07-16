@@ -1,9 +1,8 @@
 import {HousingType} from './enums.js';
-import {addMapLoadHandler, addMainPinMarkerMoveHandler, resetMap} from './map/map.js';
-import {saveAd} from './fetchers.js';
 import {showModal} from './modal.js';
+import * as fetchers from './fetchers.js';
 
-const TIME_OUT = 1500;
+const MODAL_TIMEOUT = 1500;
 const adForm = document.querySelector('.ad-form');
 
 
@@ -94,10 +93,11 @@ const updateCapacitySelectOptions = (rooms) => {
 };
 
 /**
- * @param {Coordinates} coordinates
- * @returns {string}
+ * @param {string} value
  */
-const formatCoordinatesToString = (coordinates) => `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
+export const updateAddressInputValue = (value) => {
+  addressInput.value = value;
+};
 
 /**
  * @affects priceInput
@@ -139,60 +139,29 @@ const handleTimeoutSelectChange = () => {
 };
 
 /**
- * @affects adForm
+ * @param {FormData} rawAd
  * @returns {void}
  */
-const handleMapLoad = () => {
-  enableAdForm();
-};
-
-/**
- * @param {Coordinates} coordinates
- * @affects addressInput
- * @return {void}
- */
-const handleMapPinMarkerMove = (coordinates) => {
-  addressInput.value = formatCoordinatesToString(coordinates);
-};
-
-timeinSelect.addEventListener('change', handleTimeinSelectChange);
-timeoutSelect.addEventListener('change', handleTimeoutSelectChange);
-housingTypeSelect.addEventListener('change', handleHousingTypeSelectChange);
-roomsSelect.addEventListener('change', handleRoomsSelectChange);
-addMapLoadHandler(handleMapLoad);
-addMainPinMarkerMoveHandler(handleMapPinMarkerMove);
-
-updateCapacitySelectOptions(roomsSelect.value);
-
-/**
- * @affects window
- * @affects document
- * @returns {void}
- */
-const handleSaveAdFullfilled = () => {
-  showModal({
-    message: 'Данные отправлены успешно',
-    isError: false,
-  }, TIME_OUT);
-};
-
-/**
- * @affects window
- * @affects document
- * @returns {void}
- */
-export const handleSaveAdRejected = () => {
-  showModal({
-    message: 'При отправке данных произошла ошибка',
-    isError: true,
-    buttonParams: {
-      text: 'Попробовать ещё раз',
-    },
-  });
-};
-
-const handleAdFormReset = () => {
-  resetMap();
+const saveAd = (rawAd) => {
+  fetchers.saveAd(rawAd)
+    .then(() => {
+      showModal({
+        message: 'Данные отправлены успешно',
+      }, MODAL_TIMEOUT);
+      adForm.reset();
+    })
+    .catch(() => {
+      showModal({
+        message: 'При отправке данных произошла ошибка',
+        isError: true,
+        buttonParams: {
+          text: 'Попробовать ещё раз',
+          onClick: () => {
+            saveAd();
+          },
+        },
+      });
+    });
 };
 
 /**
@@ -202,13 +171,43 @@ const handleAdFormReset = () => {
 export const handleAdFormSubmit = (evt) => {
   evt.preventDefault();
 
-  const formData = new FormData(adForm);
+  saveAd(new FormData(adForm));
+};
 
-  saveAd(formData)
-    .then(handleSaveAdFullfilled)
-    .then(adForm.reset())
-    .catch(handleSaveAdRejected);
+/**
+ * @typedef AdFormResetHandler
+ * @type {function(): void}
+ */
+
+/**
+ * @type {AdFormResetHandler[]}
+ */
+const adFormResetHandlers = [];
+
+/**
+ * @param {AdFormResetHandler} handler
+ * @returns {void}
+ */
+export const addAdFormResetHandler = (handler) => {
+  adFormResetHandlers.push(handler);
+};
+
+/**
+ * @returns {void}
+ */
+const handleAdFormReset = () => {
+  if (adFormResetHandlers.length) {
+    adFormResetHandlers.forEach((handler) => {
+      handler();
+    });
+  }
 };
 
 adForm.addEventListener('submit', handleAdFormSubmit);
 adForm.addEventListener('reset', handleAdFormReset);
+timeinSelect.addEventListener('change', handleTimeinSelectChange);
+timeoutSelect.addEventListener('change', handleTimeoutSelectChange);
+housingTypeSelect.addEventListener('change', handleHousingTypeSelectChange);
+roomsSelect.addEventListener('change', handleRoomsSelectChange);
+
+updateCapacitySelectOptions(roomsSelect.value);

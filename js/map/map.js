@@ -43,20 +43,17 @@ export const addMapLoadHandler = (handler) => {
  * @returns {void}
  */
 const handleMapLoad = () => {
-  queueMicrotask(() => {
-    if (mapLoadHandlers.length) {
-      mapLoadHandlers.forEach((handler) => {
-        handler();
-      });
-    }
+  if (mapLoadHandlers.length) {
+    mapLoadHandlers.forEach((handler) => {
+      handler();
+    });
+  }
 
-    enableMapFiltersForm();
-  });
+  enableMapFiltersForm();
 };
 
 const map = L.map('map-canvas')
-  .on('load', handleMapLoad)
-  .setView(MAP_VIEW_CENTER_COORDINATES, MAP_VIEW_ZOOM);
+  .on('load', handleMapLoad);
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -139,28 +136,37 @@ export const resetMap = () => {
   map.setView(MAP_VIEW_CENTER_COORDINATES, MAP_VIEW_ZOOM);
 };
 
-/**
- * @returns {void}
- */
-const handleFetchAdsFulfilled = (ads) => {
-  ads.slice(0, MAP_MAX_PIN_MARKERS).forEach(renderPinMarker);
+const fetchAndRenderAds = () => {
+  fetchAds()
+    .then((ads) => {
+      ads.slice(0, MAP_MAX_PIN_MARKERS).forEach(renderPinMarker);
+    })
+    .catch(() => {
+      showModal({
+        message: 'Что-то пошло не так',
+        isError: true,
+        buttonParams: {
+          text: 'Попробовать ещё раз',
+          onClick: () => {
+            fetchAndRenderAds();
+          },
+        },
+      });
+    });
 };
 
-/**
- * @affects window
- * @affects document
- * @returns {void}
- */
-const handleFetchAdsRejected = () => {
-  showModal({
-    message: 'Что-то пошло не так',
-    isError: true,
-    buttonParams: {
-      text: 'Попробовать ещё раз',
-    },
-  });
-};
 
-fetchAds()
-  .then(handleFetchAdsFulfilled)
-  .catch(handleFetchAdsRejected);
+/**
+ * Инициализация модуля карты.
+ * Вынесена в отдельную функцию для того, чтобы модули аналогичного уровня успели подписаться на событие прежде, чем эти
+ * события возникнут
+ * @returs {void}
+ */
+export const initMap = () => {
+  /**
+   * Вызов setView здесь обусловлен тем, что он сразу создает событие load, из-за чего, модули, подписавшиеся на него,
+   * не будут оповещены об этом
+   */
+  map.setView(MAP_VIEW_CENTER_COORDINATES, MAP_VIEW_ZOOM);
+  fetchAndRenderAds();
+};

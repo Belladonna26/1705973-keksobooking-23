@@ -115,16 +115,15 @@ export const createModal = (message, isError, buttonParams) => {
 /**
  * @param {object} modalParams
  * @param {string} modalParams.message
- * @param {boolean} modalParams.isError
+ * @param {boolean} [modalParams.isError]
  * @param {object} [modalParams.button]
  * @param {string} modalParams.button.text
  * @param {function(Event): void} modalParams.button.onClick
- * @param {number} timeout
+ * @param {number} [timeout]
  * @affects renderedModal
  * @affects renderedModalTimeout
  * @affects window
  * @affects document
- * @cl
  * @returns {void}
  */
 export const showModal = (modalParams, timeout) => {

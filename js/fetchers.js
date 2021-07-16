@@ -28,7 +28,7 @@ export const fetchAds = () => fetch('https://23.javascript.pages.academy/keksobo
  */
 
 /**
- * @param {RawAd} rawAd
+ * @param {FormData} rawAd
  * @returns {Promise}
  * @throws {Error}
  */
