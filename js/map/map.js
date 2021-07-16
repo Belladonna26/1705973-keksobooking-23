@@ -1,7 +1,8 @@
-import {createAd} from '../mocks/ad.js';
-import {createAndFillArray} from '../utils.js';
 import {disableMapFiltersForm, enableMapFiltersForm} from './map-filters-form.js';
 import {createAdCard} from './ad-card.js';
+import {fetchAds} from '../fetchers.js';
+import {showModal} from '../modal.js';
+import {MAP_MAX_PIN_MARKERS} from './constants.js';
 import {
   MAP_VIEW_CENTER_COORDINATES,
   MAP_VIEW_ZOOM,
@@ -12,6 +13,10 @@ import {
   MAP_PIN_ICON_SIZE,
   MAP_PIN_ANCHOR_SIZE
 } from './constants.js';
+
+if (L === undefined) {
+  throw new Error('Не найден L');
+}
 
 disableMapFiltersForm();
 
@@ -38,20 +43,17 @@ export const addMapLoadHandler = (handler) => {
  * @returns {void}
  */
 const handleMapLoad = () => {
-  queueMicrotask(() => {
-    if (mapLoadHandlers.length) {
-      mapLoadHandlers.forEach((handler) => {
-        handler();
-      });
-    }
+  if (mapLoadHandlers.length) {
+    mapLoadHandlers.forEach((handler) => {
+      handler();
+    });
+  }
 
-    enableMapFiltersForm();
-  });
+  enableMapFiltersForm();
 };
 
 const map = L.map('map-canvas')
-  .on('load', handleMapLoad)
-  .setView(MAP_VIEW_CENTER_COORDINATES, MAP_VIEW_ZOOM);
+  .on('load', handleMapLoad);
 
 L.tileLayer(
   'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
@@ -108,11 +110,10 @@ export const addMainPinMarkerMoveHandler = (handler) => {
 mainPinMarker.on('move', handleMainPinMarkerMove);
 
 /**
- *
  * @param {Ad} ad
  * @returns {void}
  */
-const renderPinMarker = (ad) => {
+export const renderPinMarker = (ad) => {
   L.marker(
     ad.location,
     {
@@ -126,6 +127,46 @@ const renderPinMarker = (ad) => {
     .bindPopup(createAdCard(ad), {keepInView: true});
 };
 
-const ads = createAndFillArray(10, createAd);
+/**
+ * @returns {void}
+ */
+export const resetMap = () => {
+  mainPinMarker.setLatLng(MAP_VIEW_CENTER_COORDINATES);
+  map.closePopup();
+  map.setView(MAP_VIEW_CENTER_COORDINATES, MAP_VIEW_ZOOM);
+};
 
-ads.forEach(renderPinMarker);
+const fetchAndRenderAds = () => {
+  fetchAds()
+    .then((ads) => {
+      ads.slice(0, MAP_MAX_PIN_MARKERS).forEach(renderPinMarker);
+    })
+    .catch(() => {
+      showModal({
+        message: 'Что-то пошло не так',
+        isError: true,
+        buttonParams: {
+          text: 'Попробовать ещё раз',
+          onClick: () => {
+            fetchAndRenderAds();
+          },
+        },
+      });
+    });
+};
+
+
+/**
+ * Инициализация модуля карты.
+ * Вынесена в отдельную функцию для того, чтобы модули аналогичного уровня успели подписаться на событие прежде, чем эти
+ * события возникнут
+ * @returs {void}
+ */
+export const initMap = () => {
+  /**
+   * Вызов setView здесь обусловлен тем, что он сразу создает событие load, из-за чего, модули, подписавшиеся на него,
+   * не будут оповещены об этом
+   */
+  map.setView(MAP_VIEW_CENTER_COORDINATES, MAP_VIEW_ZOOM);
+  fetchAndRenderAds();
+};

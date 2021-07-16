@@ -13,4 +13,4 @@ export const MAP_MAIN_PIN_ICON_SIZE = [52,52];
 export const MAP_MAIN_PIN_ANCHOR_SIZE = [26,52];
 export const MAP_PIN_ICON_SIZE = [40,40];
 export const MAP_PIN_ANCHOR_SIZE = [20,40];
-
+export const MAP_MAX_PIN_MARKERS = 10;

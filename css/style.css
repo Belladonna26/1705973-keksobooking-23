@@ -923,8 +923,7 @@ fieldset {
  * Сообщения об успешном и неуспешном создании объявления
  */
 
-.success,
-.error {
+.modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -933,11 +932,15 @@ fieldset {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
 
-  width: 100%;
-  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   overflow: auto;
 
-  padding-top: 300px;
+  width: 100%;
+  height: 100%;
 
   text-align: center;
   vertical-align: middle;
@@ -945,17 +948,21 @@ fieldset {
   background-color: rgba(0, 0, 0, 0.8);
 }
 
-.success__message,
-.error__message {
+.modal_error .modal__message::before {
+  background-image: url("../img/muffin-red.svg");
+}
+
+.modal__message {
   position: relative;
+
+  margin: 0 0 20px;
 
   color: #ffffff;
   font-size: 50px;
   font-weight: 700;
 }
 
-.success__message::before,
-.error__message::before {
+.modal__message::before {
   content: "";
   position: absolute;
 
@@ -974,11 +981,7 @@ fieldset {
           transform: translateX(-50%);
 }
 
-.error__message::before {
-  background-image: url("../img/muffin-red.svg");
-}
-
-.error__button {
+.modal__button {
   padding: 10px;
 
   font-size: 22px;
@@ -993,16 +996,16 @@ fieldset {
   border-radius: 8px;
 }
 
-.error__button:hover,
-.error__button:focus {
+.modal__button:hover,
+.modal__button:focus {
   opacity: 0.8;
 }
 
-.error__button:focus {
+.modal__button:focus {
   outline: none;
 }
 
-.error__button:active {
+.modal__button:active {
   outline: none;
   opacity: 0.6;
 }

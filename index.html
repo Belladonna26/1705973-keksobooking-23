@@ -92,7 +92,7 @@
         </fieldset>
         <fieldset class="ad-form__element ad-form__element--wide">
           <label class="ad-form__label" for="address">Адрес (координаты)</label>
-          <input id="address" name="address" type="text" readonly>
+          <input id="address" name="address" type="text" value="35.41220, 139.41300" readonly>
         </fieldset>
         <fieldset class="ad-form__element">
           <label class="ad-form__label" for="type">Тип жилья</label>
@@ -216,18 +216,11 @@
     </article>
   </template>
 
-  <!-- Сообщение об успешном создании объявления -->
-  <template id="success">
-    <div class="success">
-      <p class="success__message">Ваше объявление<br>успешно размещено!</p>
-    </div>
-  </template>
-
-  <!-- Сообщение об ошибке создания объявления -->
-  <template id="error">
-    <div class="error">
-      <p class="error__message">Ошибка размещения объявления</p>
-      <button type="button" class="error__button">Попробовать снова</button>
+  <!-- Модальное окно -->
+  <template id="modal">
+    <div class="modal">
+      <p class="modal__message">Ошибка размещения объявления</p>
+      <button class="modal__button" type="button">Попробовать снова</button>
     </div>
   </template>
 

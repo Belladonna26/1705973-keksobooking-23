@@ -20,3 +20,4 @@ export const HousingType = {
   bungalow: 'bungalow',
   hotel: 'hotel',
 };
+

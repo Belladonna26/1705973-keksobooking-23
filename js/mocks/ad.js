@@ -10,4 +10,3 @@ export const createAd = () => ({
   offer: createOffer(),
   location: createLocation(),
 });
-

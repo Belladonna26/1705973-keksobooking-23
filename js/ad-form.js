@@ -1,9 +1,10 @@
 import {HousingType} from './enums.js';
-import {addMapLoadHandler} from './map/map.js';
-import {addMainPinMarkerMoveHandler} from './map/map.js';
-import {MAP_VIEW_CENTER_COORDINATES} from './map/constants.js';
+import {showModal} from './modal.js';
+import * as fetchers from './fetchers.js';
 
+const MODAL_TIMEOUT = 1500;
 const adForm = document.querySelector('.ad-form');
+
 
 if (adForm === null) {
   throw new Error('Не найден adForm');
@@ -92,10 +93,11 @@ const updateCapacitySelectOptions = (rooms) => {
 };
 
 /**
- * @param {Coordinates} coordinates
- * @returns {string}
+ * @param {string} value
  */
-const formatCoordinatesToString = (coordinates) => `${coordinates.lat.toFixed(5)}, ${coordinates.lng.toFixed(5)}`;
+export const updateAddressInputValue = (value) => {
+  addressInput.value = value;
+};
 
 /**
  * @affects priceInput
@@ -137,28 +139,75 @@ const handleTimeoutSelectChange = () => {
 };
 
 /**
- * @affects adForm
+ * @param {FormData} rawAd
  * @returns {void}
  */
-const handleMapLoad = () => {
-  enableAdForm();
+const saveAd = (rawAd) => {
+  fetchers.saveAd(rawAd)
+    .then(() => {
+      showModal({
+        message: 'Данные отправлены успешно',
+      }, MODAL_TIMEOUT);
+      adForm.reset();
+    })
+    .catch(() => {
+      showModal({
+        message: 'При отправке данных произошла ошибка',
+        isError: true,
+        buttonParams: {
+          text: 'Попробовать ещё раз',
+          onClick: () => {
+            saveAd();
+          },
+        },
+      });
+    });
 };
 
 /**
- * @param {Coordinates} coordinates
- * @affects addressInput
- * @return {void}
+ * @param {Event} evt
+ * @returns {void}
  */
-const handleMapPinMarkerMove = (coordinates) => {
-  addressInput.value = formatCoordinatesToString(coordinates);
+export const handleAdFormSubmit = (evt) => {
+  evt.preventDefault();
+
+  saveAd(new FormData(adForm));
 };
 
+/**
+ * @typedef AdFormResetHandler
+ * @type {function(): void}
+ */
+
+/**
+ * @type {AdFormResetHandler[]}
+ */
+const adFormResetHandlers = [];
+
+/**
+ * @param {AdFormResetHandler} handler
+ * @returns {void}
+ */
+export const addAdFormResetHandler = (handler) => {
+  adFormResetHandlers.push(handler);
+};
+
+/**
+ * @returns {void}
+ */
+const handleAdFormReset = () => {
+  if (adFormResetHandlers.length) {
+    adFormResetHandlers.forEach((handler) => {
+      handler();
+    });
+  }
+};
+
+adForm.addEventListener('submit', handleAdFormSubmit);
+adForm.addEventListener('reset', handleAdFormReset);
 timeinSelect.addEventListener('change', handleTimeinSelectChange);
 timeoutSelect.addEventListener('change', handleTimeoutSelectChange);
 housingTypeSelect.addEventListener('change', handleHousingTypeSelectChange);
 roomsSelect.addEventListener('change', handleRoomsSelectChange);
-addMapLoadHandler(handleMapLoad);
-addMainPinMarkerMoveHandler(handleMapPinMarkerMove);
 
-addressInput.value = formatCoordinatesToString(MAP_VIEW_CENTER_COORDINATES);
 updateCapacitySelectOptions(roomsSelect.value);
