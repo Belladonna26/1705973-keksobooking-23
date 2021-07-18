@@ -1,3 +1,5 @@
+const TIMEOUT_DELAY = 500;
+
 /**
  * @param {number} min
  * @param {number} max
@@ -73,27 +75,6 @@ export const pluralize = (number, wordForms) => {
 };
 
 /**
- * @template T
- * @param {number} length
- * @param {T | function(): T} fnOrValue
- * @return {T[]}
- */
-export const createAndFillArray = (length, fnOrValue) => {
-  if (typeof fnOrValue === 'function') {
-    return Array.from({length}).map(() => fnOrValue());
-  }
-
-  return Array.from({length}).fill(fnOrValue);
-};
-
-/**
- * @template T
- * @param {T[]} array
- * @return {T}
- */
-export const getFirstArrayElement = (array) => array[0];
-
-/**
  * @param {Coordinates} coordinates
  * @returns {string}
  */
@@ -102,7 +83,7 @@ export const formatCoordinatesToString = (coordinates) => `${coordinates.lat.toF
 // Функция взята из интернета и доработана
 // Источник - https://www.freecodecamp.org/news/javascript-debounce-example
 
-export const debounce = (callback, timeoutDelay = 500) => {
+export const debounce = (callback, timeoutDelay = TIMEOUT_DELAY) => {
   // Используем замыкания, чтобы id таймаута у нас навсегда приклеился
   // к возвращаемой функции с setTimeout, тогда мы его сможем перезаписывать
   let timeoutId;
@@ -117,29 +98,5 @@ export const debounce = (callback, timeoutDelay = 500) => {
 
     // Таким образом цикл «поставить таймаут - удалить таймаут» будет выполняться,
     // пока действие совершается чаще, чем переданная задержка timeoutDelay
-  };
-};
-
-// Функция взята из интернета и доработана
-// Источник - https://github.com/you-dont-need/You-Dont-Need-Lodash-Underscore#_throttle
-
-export const throttle = (callback, delayBetweenFrames) => {
-  // Используем замыкания, чтобы время "последнего кадра" навсегда приклеилось
-  // к возвращаемой функции с условием, тогда мы его сможем перезаписывать
-  let lastTime = 0;
-
-  return (...rest) => {
-    // Получаем текущую дату в миллисекундах,
-    // чтобы можно было в дальнейшем
-    // вычислять разницу между кадрами
-    const now = new Date();
-
-    // Если время между кадрами больше задержки,
-    // вызываем наш колбэк и перезаписываем lastTime
-    // временем "последнего кадра"
-    if (now - lastTime >= delayBetweenFrames) {
-      callback.apply(this, rest);
-      lastTime = now;
-    }
   };
 };
