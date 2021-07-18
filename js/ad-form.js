@@ -5,7 +5,6 @@ import * as fetchers from './fetchers.js';
 const MODAL_TIMEOUT = 1500;
 const adForm = document.querySelector('.ad-form');
 
-
 if (adForm === null) {
   throw new Error('Не найден adForm');
 }

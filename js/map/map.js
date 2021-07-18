@@ -1,9 +1,9 @@
-import {disableMapFiltersForm, enableMapFiltersForm} from './map-filters-form.js';
+import {disableMapFiltersForm, enableMapFiltersForm, addMapFiltersFormChangeHandler} from './map-filters-form.js';
 import {createAdCard} from './ad-card.js';
 import {fetchAds} from '../fetchers.js';
 import {showModal} from '../modal.js';
-import {MAP_MAX_PIN_MARKERS} from './constants.js';
 import {
+  MAP_MAX_PIN_MARKERS,
   MAP_VIEW_CENTER_COORDINATES,
   MAP_VIEW_ZOOM,
   MAP_MAIN_PIN_ICON_URL,
@@ -13,6 +13,7 @@ import {
   MAP_PIN_ICON_SIZE,
   MAP_PIN_ANCHOR_SIZE
 } from './constants.js';
+import {setAds, getAds} from '../state.js';
 
 if (L === undefined) {
   throw new Error('Не найден L');
@@ -62,6 +63,8 @@ L.tileLayer(
   },
 ).addTo(map);
 
+let markersLayerGroup;
+
 const mainPinMarker = L.marker(
   MAP_VIEW_CENTER_COORDINATES,
   {
@@ -110,10 +113,32 @@ export const addMainPinMarkerMoveHandler = (handler) => {
 mainPinMarker.on('move', handleMainPinMarkerMove);
 
 /**
+ * @affects map
+ * @affects markersLayerGroup
+ * @return {void}
+ */
+export const removePinMarkers = () => {
+  if (!markersLayerGroup) {
+    return;
+  }
+
+  map.removeLayer(markersLayerGroup);
+
+  markersLayerGroup = undefined;
+};
+
+window.removePinMarkers = removePinMarkers;
+
+/**
  * @param {Ad} ad
  * @returns {void}
+ * @throws {Error}
  */
 export const renderPinMarker = (ad) => {
+  if (!markersLayerGroup) {
+    throw new Error('Отсутствует слой для меток');
+  }
+
   L.marker(
     ad.location,
     {
@@ -123,8 +148,24 @@ export const renderPinMarker = (ad) => {
         iconAnchor: MAP_PIN_ANCHOR_SIZE,
       }),
     },
-  ).addTo(map)
+  ).addTo(markersLayerGroup)
     .bindPopup(createAdCard(ad), {keepInView: true});
+};
+
+/**
+ * @param {Ad[]} ads
+ * @returns {void}
+ */
+const renderPinMarkers = (ads) => {
+  if (markersLayerGroup) {
+    removePinMarkers();
+  }
+
+  markersLayerGroup = L.layerGroup();
+
+  ads.forEach(renderPinMarker);
+
+  map.addLayer(markersLayerGroup);
 };
 
 /**
@@ -136,10 +177,13 @@ export const resetMap = () => {
   map.setView(MAP_VIEW_CENTER_COORDINATES, MAP_VIEW_ZOOM);
 };
 
-const fetchAndRenderAds = () => {
+export const fetchAndRenderAds = () => {
   fetchAds()
     .then((ads) => {
-      ads.slice(0, MAP_MAX_PIN_MARKERS).forEach(renderPinMarker);
+      setAds(ads);
+      renderPinMarkers(
+        getAds().slice(0, MAP_MAX_PIN_MARKERS),
+      );
     })
     .catch(() => {
       showModal({
@@ -155,6 +199,15 @@ const fetchAndRenderAds = () => {
     });
 };
 
+
+/**
+ * @type {MapFiltersFormChangeHandler}
+ */
+const handleMapFiltersFormChange = (ads) => {
+  renderPinMarkers(ads);
+};
+
+addMapFiltersFormChangeHandler(handleMapFiltersFormChange);
 
 /**
  * Инициализация модуля карты.
